@@ -30,8 +30,8 @@ class Person {
         return "Person [name=" + name + ", age=" + age + "]";
     }
 }
- 
-class Account {
+    
+    class Account {
     private long accNum;
     private double balance;
     private Person accHolder;

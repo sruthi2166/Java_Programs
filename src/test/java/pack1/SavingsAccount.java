@@ -1,6 +1,6 @@
 package pack1;
- 
-class SavingsAccount extends Account {
+
+public class SavingsAccount extends Account {
     private static final double MINIMUM_BALANCE = 500.0;
  
     public SavingsAccount(double initialBalance, Person accHolder) {
