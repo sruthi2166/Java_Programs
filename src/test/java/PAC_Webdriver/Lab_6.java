@@ -1,139 +1,79 @@
 package PAC_Webdriver;
 
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+ 
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+ 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.bonigarcia.wdm.WebDriverManager;
-
-import java.time.Duration;
-
+import org.openqa.selenium.edge.EdgeDriver;
 public class Lab_6 {
-    public static void main(String[] args) {
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+ 
+	public static void main(String[] args) throws InterruptedException {
+		// TODO Auto-generated method stub
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		driver.get("https://www.amazon.in/");
+		//Login
+		driver.findElement(By.id("nav-link-accountList")).click();
+		driver.findElement(By.id("ap_email")).sendKeys("7680969526");
+		driver.findElement(By.id("continue")).click();
+		driver.findElement(By.id("ap_password")).sendKeys("Sruthi21");
+		driver.findElement(By.id("signInSubmit")).click();
+		//Search
+		WebElement Search=driver.findElement(By.id("twotabsearchtextbox"));
+		Search.sendKeys("Monitors");
+		Search.submit();
+		//Dropdown
+		driver.findElement(By.xpath("//*[@id=\"a-autoid-0-announce\"]")).click();
+		driver.findElement(By.id("s-result-sort-select_1")).click();
+		//Scroll
+		JavascriptExecutor js=(JavascriptExecutor)driver;
+		js.executeScript("window.scrollBy(0,300);");
+		Thread.sleep(8000);
+		//AddToCart
+		WebElement item=driver.findElement(By.xpath("//*[@id=\"search\"]/div[1]/div[1]/div/span[1]/div[1]/div[3]/div/div/span/div/div/div/div[2]/div/div/div[1]/h2/a"));
+		item.click();
+		String itemName=item.getText();
+		ArrayList<String> list=new ArrayList(driver.getWindowHandles());
+		driver.switchTo().window(list.get(1));
+		driver.findElement(By.id("add-to-cart-button")).click();
+		driver.navigate().back();
+		driver.findElement(By.id("add-to-wishlist-button-submit")).click();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		WebElement monitor=driver.findElement(By.xpath("//a[@id='huc-item-link']/span"));
+		System.out.println(monitor.getText());
+		System.out.println(itemName);
+		//Product Wishlist verification
+		if(monitor.getText().equals(itemName)) {
+			System.out.println("Success You have added "+itemName);
+			js.executeScript("alert('Success You have added '+ arguments[0])",itemName);
+		}
+		Thread.sleep(2000);
+		Alert Alt=driver.switchTo().alert();
+		Alt.accept();
+		//close Wishlist
+		driver.findElement(By.xpath("//*[@id=\"a-popover-3\"]/div/header/button")).click();
+		//Search Mobile in SearchBox
+		WebElement SearchMobile=driver.findElement(By.id("twotabsearchtextbox"));
+		SearchMobile.clear();
+//		SearchMobile.sendKeys("");
+		SearchMobile.sendKeys("Mobile");
+		SearchMobile.submit();
+		//checkBox
+		WebElement Apple=driver.findElement(By.xpath("//*[@id=\"p_123/110955\"]/span/a"));
+		Apple.click();
+		driver.findElement(By.id("nav-cart")).click();
 
-        driver.get("https://www.meesho.com/");
-        driver.manage().window().maximize();
+//		js.executeScript("'//*[@id=\"nav-link-accountList\"]'.hover()");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-        try {
-            // Log in with phone number
-            WebElement phoneNumberInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@type='tel']")));
-            phoneNumberInput.sendKeys("your_phone_number"); // Replace with your phone number
-            WebElement loginButton = driver.findElement(By.xpath("//button[contains(text(),'Login')]"));
-            loginButton.click();
-
-            // Add any necessary waiting for OTP if needed
-            // wait.until(...); // Add here if you need to handle OTP
-
-            // Navigate to Components tab
-            WebElement componentsTab = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Components']")));
-            componentsTab.click();
-
-            // Select Monitors
-            WebElement monitorsLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Monitors']")));
-            monitorsLink.click();
-
-            // Select 25 from 'Show' dropdown
-            WebElement showDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//select[@id='show']")));
-            showDropdown.click();
-            WebElement option25 = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//option[text()='25']")));
-            option25.click();
-
-            // Click on 'Add to cart' for the first item
-            WebElement firstItemAddToCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'Add to cart')][1]")));
-            firstItemAddToCartButton.click();
-
-            // Click on 'Specification' tab
-            WebElement specificationTab = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Specification']")));
-            specificationTab.click();
-
-            // Verify details present on the page
-            // Add your verification logic here
-
-            // Click on 'Add to Wish list' button
-            WebElement addToWishlistButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'Add to Wish List')]")));
-            addToWishlistButton.click();
-
-            // Verify success message for wishlist
-            WebElement wishlistSuccessMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Success: You have added')]")));
-            if (wishlistSuccessMessage.isDisplayed()) {
-                System.out.println("Product successfully added to wish list.");
-            }
-
-            // Search for mobile
-            WebElement searchBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='Search for products']")));
-            searchBox.sendKeys("saree");
-            searchBox.sendKeys(Keys.RETURN);
-
-            // Click on 'Search in product descriptions' checkbox
-            WebElement searchInDescriptionsCheckbox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type='checkbox' and @id='searchInDescriptions']")));
-            searchInDescriptionsCheckbox.click();
-
-            // Click on link 'HTC Touch HD'
-            WebElement htcTouchHDLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'HTC Touch HD')]")));
-            htcTouchHDLink.click();
-
-            // Clear '1' from 'Qty' and enter '3'
-            WebElement quantityInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@type='number']")));
-            quantityInput.clear();
-            quantityInput.sendKeys("3");
-
-            // Click on 'Add to Cart' button
-            WebElement addToCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'Add to Cart')]")));
-            addToCartButton.click();
-
-            // Verify success message for adding mobile to cart
-            WebElement mobileSuccessMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Success: You have added HTC Touch HD to your shopping cart!')]")));
-            if (mobileSuccessMessage.isDisplayed()) {
-                System.out.println("Mobile successfully added to cart.");
-            }
-
-            // Click on 'View cart' button
-            WebElement viewCartButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'View cart')]")));
-            viewCartButton.click();
-
-            // Verify mobile name added to the cart
-            WebElement mobileNameInCart = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'HTC Touch HD')]")));
-            if (mobileNameInCart.isDisplayed()) {
-                System.out.println("Mobile name verified in the cart.");
-            }
-
-            // Click on 'Checkout' button
-            WebElement checkoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'Checkout')]")));
-            checkoutButton.click();
-
-            // Click on 'My Account' dropdown
-            WebElement myAccountDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='account-dropdown']")));
-            myAccountDropdown.click();
-
-            // Select 'Logout' from dropdown
-            WebElement logoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Logout']")));
-            logoutButton.click();
-
-            // Verify 'Account Logout' heading
-            WebElement logoutHeading = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(),'Account Logout')]")));
-            if (logoutHeading.isDisplayed()) {
-                System.out.println("Successfully logged out.");
-            }
-
-            // Click on 'Continue'
-            WebElement continueButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(),'Continue')]")));
-            continueButton.click();
-
-        } catch (Exception e) {
-            System.out.println("Error occurred: " + e.getMessage());
-        } finally {
-            driver.quit();
-        }
-    }
+ 
+	}
+ 
 }
-
