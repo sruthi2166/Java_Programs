@@ -1,0 +1,16 @@
+<LoginDetails>
+<login1>
+<url>
+"https://demo.opencart.com/en-gb?route=account/login"
+</url>
+<username>katapallysruthi@gmail.com</username>
+<password>Sruthi21</password>
+</login1>
+<login2>
+<url1>
+"https://demo.opencart.com/en-gb?route=account/login"
+</url1>
+<username1>katapallysruthi21@gmail.com</username1>
+<password1>Sruthi213</password1>
+</login2>
+</LoginDetails>

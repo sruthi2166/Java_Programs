@@ -1,5 +1,7 @@
 package pack1;
 
+import LAB2.Person;
+
 public class ACC_cls {
 	abstract static class Account {
 	    private long accNum;

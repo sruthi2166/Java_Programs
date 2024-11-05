@@ -1,5 +1,7 @@
 package LAB2;
- 
+
+import pack1.SavingsAccount;
+
 class Person {
     private String name;
     private float age;
@@ -30,13 +32,13 @@ class Person {
     }
 }
  
-abstract class Account {
+    public abstract class Account {
     private long accNum;
     private double balance;
     private Person accHolder;
     private static long accCounter = 1000;
  
-    public Account(Person accHolder, double initialBalance) {
+    public void  Account(Person accHolder, double initialBalance) {
         this.accHolder = accHolder;
         this.balance = initialBalance;
         this.accNum = accCounter++; // Auto-generate accNum
@@ -80,7 +82,7 @@ abstract class Account {
  
 class SavingsAccount extends Account {
     public SavingsAccount(Person accHolder, double initialBalance) {
-        super(accHolder, initialBalance);
+        super();
     }
  
     @Override
